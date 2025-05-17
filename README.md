@@ -32,7 +32,8 @@ To confirm the server is up and running and explore available resources and tool
 npx @modelcontextprotocol/inspector
 ```
 
-TBD
+![s01](https://github.com/user-attachments/assets/1dfcfda5-01ae-411c-8a6b-30996dec41c8)
+
 
 ## Core Concepts
 
