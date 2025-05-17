@@ -1,0 +1,25 @@
+[project]
+name = "bacnet-mcp"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.13"
+dependencies = [
+    "bacpypes3>=0.0.102",
+    "fastmcp>=2.3.4",
+]
+
+[project.scripts]
+bacnet-mcp = "bacnet_mcp:main"
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[dependency-groups]
+dev = [
+    "black>=25.1.0",
+    "pylint>=3.3.7",
+    "pytest>=8.3.5",
+    "trio>=0.30.0",
+]
