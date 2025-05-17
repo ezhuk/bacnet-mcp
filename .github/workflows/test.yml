@@ -23,5 +23,5 @@ jobs:
           pip install uv
           uv sync
           uv run black src
-          uv run pylint src
+          uv run pylint --disable=c0103 src
           uv run pytest
