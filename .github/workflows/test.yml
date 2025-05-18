@@ -24,3 +24,4 @@ jobs:
           uv sync
           uv run black src
           uv run pylint src
+          uv run pytest
