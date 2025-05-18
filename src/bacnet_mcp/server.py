@@ -12,8 +12,8 @@ from fastmcp.prompts.prompt import Message
 class BACnet:
     """Default BACnet connection settings."""
 
-    HOST: str = "127.0.0.1"
-    PORT: int = 47808
+    HOST = "127.0.0.1"
+    PORT = 47808
 
 
 mcp = FastMCP(name="BACnet MCP Server")
