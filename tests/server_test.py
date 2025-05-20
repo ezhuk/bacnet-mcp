@@ -13,6 +13,7 @@ from pydantic import AnyUrl
 
 from bacnet_mcp.server import mcp
 
+
 async def server_main() -> None:
     app = None
     try:
@@ -55,7 +56,8 @@ async def test_read_property(bacnet_server):
             AnyUrl("udp://127.0.0.1:47809/analogValue/1/presentValue")
         )
         assert len(result) == 1
-        assert result[0].text == '5.0'
+        assert result[0].text == "5.0"
+
 
 @pytest.mark.asyncio
 async def test_write_property(bacnet_server):
@@ -72,12 +74,12 @@ async def test_write_property(bacnet_server):
             },
         )
         assert len(result) == 1
-        print(result)
         assert "succedeed" in result[0].text
 
 
 @pytest.mark.anyio
 async def test_help_prompt():
+    """Test help prompt."""
     async with Client(mcp) as client:
         result = await client.get_prompt("bacnet_help", {})
         assert len(result.messages) == 5
@@ -85,6 +87,7 @@ async def test_help_prompt():
 
 @pytest.mark.anyio
 async def test_error_prompt():
+    """Test error prompt."""
     async with Client(mcp) as client:
         result = await client.get_prompt(
             "bacnet_error", {"error": "Could not read data"}
