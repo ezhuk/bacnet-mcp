@@ -26,7 +26,7 @@ async def read_property(
     obj: str = "analogValue",
     instance: str = "1",
     prop: str = "presentValue",
-) -> int:
+) -> str:
     """Reads the content of a BACnet object property on a remote unit."""
     args = SimpleArgumentParser().parse_args()
     app = Application().from_args(args)
