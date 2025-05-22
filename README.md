@@ -87,10 +87,10 @@ def bacnet_help() -> list[Message]:
 Here are some example text inputs that can be used to interact with the server.
 
 ```text
-Read the presentValue property of analog-input,1 at 10.0.0.4.
-Fetch the units property of analog-input 2.
-Write the value 42 to analog-value instance 1.
-Set the presentValue of binary-output 3 to True.
+Read the presentValue property of analogInput,1 at 10.0.0.4.
+Fetch the units property of analogInput 2.
+Write the value 42 to analogValue instance 1.
+Set the presentValue of binaryOutput 3 to True.
 ```
 
 ## License
