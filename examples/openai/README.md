@@ -14,7 +14,7 @@ Clone the repository, then use `uv` to install project dependencies and create a
 
 ```bash
 git clone https://github.com/ezhuk/bacnet-mcp.git
-cd bacnet-cmp/examples/openai
+cd bacnet-mcp/examples/openai
 uv sync
 ```
 

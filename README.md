@@ -16,7 +16,7 @@ Clone the repository, then use `uv` to install project dependencies and create a
 
 ```bash
 git clone https://github.com/ezhuk/bacnet-mcp.git
-cd bacnet-cmp
+cd bacnet-mcp
 uv sync
 ```
 
