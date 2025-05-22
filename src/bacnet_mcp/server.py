@@ -20,6 +20,7 @@ mcp = FastMCP(name="BACnet MCP Server")
 
 
 @mcp.resource("udp://{host}:{port}/{obj}/{instance}/{prop}")
+@mcp.tool()
 async def read_property(
     host: str = BACnet.HOST,
     port: int = BACnet.PORT,
