@@ -4,7 +4,6 @@ from dataclasses import dataclass
 
 from bacpypes3.app import Application
 from bacpypes3.argparse import SimpleArgumentParser
-from bacpypes3.pdu import Address
 from fastmcp import FastMCP
 from fastmcp.prompts.prompt import Message
 
