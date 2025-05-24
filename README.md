@@ -41,10 +41,11 @@ The BACnet MCP server leverages FastMCP 2.0's core building blocks - resource te
 
 ### Read Properties
 
-Each object on a device is mapped to a resource and [resource templates](https://gofastmcp.com/servers/resources#resource-templates) are used to specify connection details (host, port) and read parameters (instance, property).
+Each object on a device is mapped to a resource (and exposed as a tool) and [resource templates](https://gofastmcp.com/servers/resources#resource-templates) are used to specify connection details (host, port) and read parameters (instance, property).
 
 ```python
 @mcp.resource("udp://{host}:{port}/{obj}/{instance}/{prop}")
+@mcp.tool()
 async def read_property(
     host: str = BACnet.HOST,
     port: int = BACnet.PORT,

@@ -64,6 +64,43 @@ async def write_property(
             app.close()
 
 
+@mcp.tool()
+async def who_is(
+    low: int,
+    high: int,
+) -> [str]:
+    """Sends a 'who-is' broadcast message."""
+    args = SimpleArgumentParser().parse_args()
+    app = Application().from_args(args)
+    try:
+        res = await app.who_is(low, high)
+        return [str(x.iAmDeviceIdentifier) for x in res]
+    except Exception as e:
+        raise RuntimeError(f"{e}") from e
+    finally:
+        if app:
+            app.close()
+
+
+@mcp.tool()
+async def who_has(
+    low: int,
+    high: int,
+    obj: str,
+) -> [str]:
+    """Sends a 'who-has' broadcast message."""
+    args = SimpleArgumentParser().parse_args()
+    app = Application().from_args(args)
+    try:
+        res = await app.who_has(low, high, obj)
+        return [str(x.deviceIdentifier) for x in res]
+    except Exception as e:
+        raise RuntimeError(f"{e}") from e
+    finally:
+        if app:
+            app.close()
+
+
 @mcp.prompt(name="bacnet_help", tags={"bacnet", "help"})
 def bacnet_help() -> list[Message]:
     """Provides examples of how to use the BACnet MCP server."""
