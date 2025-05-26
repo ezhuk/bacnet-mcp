@@ -31,6 +31,7 @@ source = { editable = "." }
 dependencies = [
     { name = "bacpypes3" },
     { name = "fastmcp" },
+    { name = "pydantic-settings" },
 ]
 
 [package.dev-dependencies]
@@ -44,6 +45,7 @@ dev = [
 requires-dist = [
     { name = "bacpypes3", specifier = ">=0.0.102" },
     { name = "fastmcp", specifier = ">=2.5.1" },
+    { name = "pydantic-settings", specifier = ">=2.9.1" },
 ]
 
 [package.metadata.requires-dev]
