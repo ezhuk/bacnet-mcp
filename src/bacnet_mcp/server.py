@@ -1,19 +1,24 @@
 """A lightweigth MCP server for the BACnet protocol."""
 
-from dataclasses import dataclass
-
 from bacpypes3.app import Application
 from bacpypes3.argparse import SimpleArgumentParser
 from fastmcp import FastMCP
 from fastmcp.prompts.prompt import Message
+from pydantic import BaseModel
+from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
-@dataclass(frozen=True)
-class BACnet:
-    """Default BACnet connection settings."""
+class BACnet(BaseModel):
+    host: str = "127.0.0.1"
+    port: int = 47808
 
-    HOST = "127.0.0.1"
-    PORT = 47808
+
+class Settings(BaseSettings):
+    bacnet: BACnet = BACnet()
+    model_config = SettingsConfigDict(env_file=".env", env_file_encoding="utf-8")
+
+
+settings = Settings()
 
 
 mcp = FastMCP(name="BACnet MCP Server")
@@ -22,8 +27,8 @@ mcp = FastMCP(name="BACnet MCP Server")
 @mcp.resource("udp://{host}:{port}/{obj}/{instance}/{prop}")
 @mcp.tool()
 async def read_property(
-    host: str = BACnet.HOST,
-    port: int = BACnet.PORT,
+    host: str = settings.bacnet.host,
+    port: int = settings.bacnet.port,
     obj: str = "analogValue",
     instance: str = "1",
     prop: str = "presentValue",
@@ -45,8 +50,8 @@ async def read_property(
 
 @mcp.tool()
 async def write_property(
-    host: str = BACnet.HOST,
-    port: int = BACnet.PORT,
+    host: str = settings.bacnet.host,
+    port: int = settings.bacnet.port,
     obj: str = "analogValue,1",
     prop: str = "presentValue",
     data: str = "1.0",
