@@ -7,6 +7,7 @@ import threading
 from bacpypes3.argparse import SimpleArgumentParser
 from bacpypes3.app import Application
 from bacpypes3.local.analog import AnalogValueObject
+from bacpypes3.local.binary import BinaryValueObject
 from pydantic import BaseModel
 
 
@@ -29,6 +30,15 @@ async def _server_main(config: Config) -> None:
                 presentValue=5.0,
                 statusFlags=[0, 0, 0, 0],
                 description="Analog Value",
+            )
+        )
+        app.add_object(
+            BinaryValueObject(
+                objectIdentifier=("binaryValue", 1),
+                objectName="binary-value",
+                presentValue="active",
+                statusFlags=[0, 0, 0, 0],
+                description="Binary Value",
             )
         )
         await asyncio.Future()

@@ -1,8 +1,6 @@
 """Server tests."""
 
-import asyncio
 import pytest
-import threading
 
 from fastmcp import Client
 from pydantic import AnyUrl
@@ -11,14 +9,21 @@ from bacnet_mcp.server import mcp
 
 
 @pytest.mark.asyncio
-async def test_read_property(server):
+@pytest.mark.parametrize(
+    "prop,expected",
+    [
+        ("analogValue/1/presentValue", "5.0"),
+        ("binaryValue/1/presentValue", "1"),
+    ],
+)
+async def test_read_property(server, prop, expected):
     """Test read_property resource."""
     async with Client(mcp) as client:
         result = await client.read_resource(
-            AnyUrl(f"udp://{server.host}:{server.port}/analogValue/1/presentValue")
+            AnyUrl(f"udp://{server.host}:{server.port}/{prop}")
         )
         assert len(result) == 1
-        assert result[0].text == "5.0"
+        assert result[0].text == expected
 
 
 @pytest.mark.asyncio
