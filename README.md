@@ -47,8 +47,8 @@ Each object on a device is mapped to a resource (and exposed as a tool) and [res
 @mcp.resource("udp://{host}:{port}/{obj}/{instance}/{prop}")
 @mcp.tool()
 async def read_property(
-    host: str = BACnet.HOST,
-    port: int = BACnet.PORT,
+    host: str = settings.bacnet.host,
+    port: int = settings.bacnet.port,
     obj: str = "analogValue",
     instance: str = "1",
     prop: str = "presentValue",
@@ -64,8 +64,8 @@ Write operations are exposed as a [tool](https://gofastmcp.com/servers/tools), a
 ```python
 @mcp.tool()
 async def write_property(
-    host: str = BACnet.HOST,
-    port: int = BACnet.PORT,
+    host: str = settings.bacnet.host,
+    port: int = settings.bacnet.port,
     obj: str = "analogValue,1",
     prop: str = "presentValue",
     data: str = "1.0",
@@ -93,6 +93,13 @@ Fetch the units property of analogInput 2.
 Write the value 42 to analogValue instance 1.
 Set the presentValue of binaryOutput 3 to True.
 ```
+
+## Examples
+
+The `examples` folder contains sample projects showing how to integrate with the BACnet MCP server using various client APIs to provide tools and context to LLMs.
+
+- [openai-agents](https://github.com/ezhuk/bacnet-mcp/tree/main/examples/openai-agents) - shows how to connect to the BACnet MCP server using the [OpenAI Agents SDK](https://openai.github.io/openai-agents-python/mcp/).
+- [openai](https://github.com/ezhuk/bacnet-mcp/tree/main/examples/openai) - a minimal app leveraging remote MCP server support in the [OpenAI Python library](https://platform.openai.com/docs/guides/tools-remote-mcp).
 
 ## License
 
