@@ -3,7 +3,6 @@
 import asyncio
 import pytest
 import threading
-import time
 
 from bacpypes3.argparse import SimpleArgumentParser
 from bacpypes3.app import Application
@@ -44,7 +43,6 @@ def thread_main():
 def bacnet_server():
     thread = threading.Thread(target=thread_main, daemon=True)
     thread.start()
-    time.sleep(0.5)
     yield
 
 
@@ -77,7 +75,7 @@ async def test_write_property(bacnet_server):
         assert "succedeed" in result[0].text
 
 
-@pytest.mark.anyio
+@pytest.mark.asyncio
 async def test_help_prompt():
     """Test help prompt."""
     async with Client(mcp) as client:
@@ -85,7 +83,7 @@ async def test_help_prompt():
         assert len(result.messages) == 5
 
 
-@pytest.mark.anyio
+@pytest.mark.asyncio
 async def test_error_prompt():
     """Test error prompt."""
     async with Client(mcp) as client:
