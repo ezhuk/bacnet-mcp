@@ -25,7 +25,9 @@ mcp = FastMCP(name="BACnet MCP Server")
 
 
 @mcp.resource("udp://{host}:{port}/{obj}/{instance}/{prop}")
-@mcp.tool()
+@mcp.tool(
+    annotations={"title": "Read Property", "readOnlyHint": True, "openWorldHint": True}
+)
 async def read_property(
     host: str = settings.bacnet.host,
     port: int = settings.bacnet.port,
@@ -48,7 +50,13 @@ async def read_property(
             app.close()
 
 
-@mcp.tool()
+@mcp.tool(
+    annotations={
+        "title": "Write Property",
+        "readOnlyHint": False,
+        "openWorldHint": True,
+    }
+)
 async def write_property(
     host: str = settings.bacnet.host,
     port: int = settings.bacnet.port,
@@ -69,7 +77,9 @@ async def write_property(
             app.close()
 
 
-@mcp.tool()
+@mcp.tool(
+    annotations={"title": "Send Who-Is", "readOnlyHint": True, "openWorldHint": True}
+)
 async def who_is(
     low: int,
     high: int,
@@ -87,7 +97,9 @@ async def who_is(
             app.close()
 
 
-@mcp.tool()
+@mcp.tool(
+    annotations={"title": "Send Who-Has", "readOnlyHint": True, "openWorldHint": True}
+)
 async def who_has(
     low: int,
     high: int,
