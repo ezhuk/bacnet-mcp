@@ -101,6 +101,27 @@ The `examples` folder contains sample projects showing how to integrate with the
 - [openai-agents](https://github.com/ezhuk/bacnet-mcp/tree/main/examples/openai-agents) - shows how to connect to the BACnet MCP server using the [OpenAI Agents SDK](https://openai.github.io/openai-agents-python/mcp/).
 - [openai](https://github.com/ezhuk/bacnet-mcp/tree/main/examples/openai) - a minimal app leveraging remote MCP server support in the [OpenAI Python library](https://platform.openai.com/docs/guides/tools-remote-mcp).
 
+## Docker
+
+The BACnet MCP server can be deployed as a Docker container. Build the image using the `docker build` command:
+
+```bash
+docker build -t bacnet-mcp .
+```
+
+Then run the container as follows:
+
+```bash
+docker run -dit \
+  --name bacnet-mcp \
+  --restart=always \
+  -p 8080:8000 \
+  --env-file .env \
+  bacnet-mcp
+```
+
+This maps port 8080 on the host to the MCP server's port 8000 inside the container and loads settings from the `.env` file, if present.
+
 ## License
 
 The server is licensed under the [MIT License](https://github.com/ezhuk/bacnet-mcp?tab=MIT-1-ov-file).
