@@ -3,9 +3,15 @@
 from bacpypes3.app import Application
 from bacpypes3.argparse import SimpleArgumentParser
 from fastmcp import FastMCP
+from fastmcp.server.auth import BearerAuthProvider
 from fastmcp.prompts.prompt import Message
 from pydantic import BaseModel
 from pydantic_settings import BaseSettings, SettingsConfigDict
+from typing import Optional
+
+
+class Auth(BaseModel):
+    key: Optional[str] = None
 
 
 class BACnet(BaseModel):
@@ -14,6 +20,7 @@ class BACnet(BaseModel):
 
 
 class Settings(BaseSettings):
+    auth: Auth = Auth()
     bacnet: BACnet = BACnet()
     model_config = SettingsConfigDict(env_file=".env", env_file_encoding="utf-8")
 
@@ -21,7 +28,12 @@ class Settings(BaseSettings):
 settings = Settings()
 
 
-mcp = FastMCP(name="BACnet MCP Server")
+mcp = FastMCP(
+    name="BACnet MCP Server",
+    auth=(
+        BearerAuthProvider(public_key=settings.auth.key) if settings.auth.key else None
+    ),
+)
 
 
 @mcp.resource("udp://{host}:{port}/{obj}/{instance}/{prop}")
