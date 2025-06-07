@@ -45,7 +45,13 @@ Each object on a device is mapped to a resource (and exposed as a tool) and [res
 
 ```python
 @mcp.resource("udp://{host}:{port}/{obj}/{instance}/{prop}")
-@mcp.tool()
+@mcp.tool(
+    annotations={
+        "title": "Read Property",
+        "readOnlyHint": True,
+        "openWorldHint": True,
+    }
+)
 async def read_property(
     host: str = settings.bacnet.host,
     port: int = settings.bacnet.port,
@@ -62,7 +68,13 @@ async def read_property(
 Write operations are exposed as a [tool](https://gofastmcp.com/servers/tools), accepting the same connection details (host, port) and allowing to set the content of an object property in a single, atomic call.
 
 ```python
-@mcp.tool()
+@mcp.tool(
+    annotations={
+        "title": "Write Property",
+        "readOnlyHint": False,
+        "openWorldHint": True,
+    }
+)
 async def write_property(
     host: str = settings.bacnet.host,
     port: int = settings.bacnet.port,
