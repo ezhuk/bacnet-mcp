@@ -5,6 +5,8 @@ from bacpypes3.argparse import SimpleArgumentParser
 from fastmcp import FastMCP
 from fastmcp.server.auth import BearerAuthProvider
 from fastmcp.prompts.prompt import Message
+from fastmcp.resources import ResourceTemplate
+from fastmcp.tools import Tool
 from pydantic import BaseModel
 from pydantic_settings import BaseSettings, SettingsConfigDict
 from typing import Optional
@@ -36,10 +38,6 @@ mcp = FastMCP(
 )
 
 
-@mcp.resource("udp://{host}:{port}/{obj}/{instance}/{prop}")
-@mcp.tool(
-    annotations={"title": "Read Property", "readOnlyHint": True, "openWorldHint": True}
-)
 async def read_property(
     host: str = settings.bacnet.host,
     port: int = settings.bacnet.port,
@@ -60,6 +58,24 @@ async def read_property(
     finally:
         if app:
             app.close()
+
+
+mcp.add_template(
+    ResourceTemplate.from_function(
+        fn=read_property, uri_template="udp://{host}:{port}/{obj}/{instance}/{prop}"
+    )
+)
+
+mcp.add_tool(
+    Tool.from_function(
+        fn=read_property,
+        annotations={
+            "title": "Read Property",
+            "readOnlyHint": True,
+            "openWorldHint": True,
+        },
+    )
+)
 
 
 @mcp.tool(
