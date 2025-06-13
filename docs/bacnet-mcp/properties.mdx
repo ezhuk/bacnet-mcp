@@ -1,0 +1,53 @@
+---
+title: Properties
+icon: settings-2
+---
+
+The BACnet MCP server leverages FastMCP 2.0's core building blocks - resource templates, tools, and prompts - to streamline BACnet read and write operations with minimal boilerplate and a clean, Pythonic interface.
+
+### Read Properties
+
+Each object on a device is mapped to a resource (and exposed as a tool) and [resource templates](https://gofastmcp.com/servers/resources#resource-templates) are used to specify connection details (host, port) and read parameters (instance, property).
+
+```python
+@mcp.resource("udp://{host}:{port}/{obj}/{instance}/{prop}")
+@mcp.tool(
+    annotations={
+        "title": "Read Property",
+        "readOnlyHint": True,
+        "openWorldHint": True,
+    }
+)
+async def read_property(
+    host: str = settings.bacnet.host,
+    port: int = settings.bacnet.port,
+    obj: str = "analogValue",
+    instance: str = "1",
+    prop: str = "presentValue",
+) -> str:
+    """Reads the content of a BACnet object property on a remote unit."""
+    ...
+```
+
+### Write Properties
+
+Write operations are exposed as a [tool](https://gofastmcp.com/servers/tools), accepting the same connection details (host, port) and allowing to set the content of an object property in a single, atomic call.
+
+```python
+@mcp.tool(
+    annotations={
+        "title": "Write Property",
+        "readOnlyHint": False,
+        "openWorldHint": True,
+    }
+)
+async def write_property(
+    host: str = settings.bacnet.host,
+    port: int = settings.bacnet.port,
+    obj: str = "analogValue,1",
+    prop: str = "presentValue",
+    data: str = "1.0",
+) -> str:
+    """Writes a BACnet object property on a remote device."""
+    ...
+```

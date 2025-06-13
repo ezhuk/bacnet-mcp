@@ -1,0 +1,47 @@
+{
+  "$schema": "https://mintlify.com/docs.json",
+  "colors": {
+    "primary": "#16A34A",
+    "light": "#07C983",
+    "dark": "#15803D"
+  },
+  "description": "",
+  "icons": {
+    "library": "lucide"
+  },
+  "name": "Docs",
+  "navigation": {
+    "dropdowns": [
+      {
+        "dropdown": "BACnet MCP Server",
+        "description": "Operate BAS/BMS systems",
+        "icon": "building",
+        "groups": [
+          {
+            "group": "Getting Started",
+            "pages": [
+              "bacnet-mcp/introduction",
+              "bacnet-mcp/installation"
+            ]
+          },
+          {
+            "group": "Core Concepts",
+            "pages": [
+              "bacnet-mcp/properties",
+              "bacnet-mcp/prompts",
+              "bacnet-mcp/authentication"
+            ]
+          },
+          {
+            "group": "Examples",
+            "pages": [
+              "bacnet-mcp/openai",
+              "bacnet-mcp/openai-agents"
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "theme": "maple"
+}
