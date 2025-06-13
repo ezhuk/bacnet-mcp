@@ -1,0 +1,22 @@
+---
+title: Prompts
+icon: chevron-right
+---
+
+Structured response messages are implemented using [prompts](https://gofastmcp.com/servers/prompts) that help guide the interaction, clarify missing parameters, and handle errors gracefully.
+
+```python
+@mcp.prompt(name="bacnet_help", tags={"bacnet", "help"})
+def bacnet_help() -> list[Message]:
+    """Provides examples of how to use the BACnet MCP server."""
+    ...
+```
+
+Here are some example text inputs that can be used to interact with the server.
+
+```text
+Read the presentValue property of analogInput,1 at 10.0.0.4.
+Fetch the units property of analogInput 2.
+Write the value 42 to analogValue instance 1.
+Set the presentValue of binaryOutput 3 to True.
+```
