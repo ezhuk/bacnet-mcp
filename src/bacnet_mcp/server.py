@@ -24,11 +24,12 @@ class BACnet(BaseModel):
 class Settings(BaseSettings):
     auth: Auth = Auth()
     bacnet: BACnet = BACnet()
-    model_config = SettingsConfigDict(env_file=".env", env_file_encoding="utf-8")
+    model_config = SettingsConfigDict(
+        env_file=".env", env_file_encoding="utf-8", env_nested_delimiter="__"
+    )
 
 
 settings = Settings()
-
 
 mcp = FastMCP(
     name="BACnet MCP Server",
