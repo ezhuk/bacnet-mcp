@@ -119,21 +119,15 @@ The `examples` folder contains sample projects showing how to integrate with the
 
 ## Docker
 
-The BACnet MCP server can be deployed as a Docker container. Build the image using the `docker build` command:
+The BACnet MCP server can be deployed as a Docker container as follows:
 
 ```bash
-docker build -t bacnet-mcp .
-```
-
-Then run the container as follows:
-
-```bash
-docker run -dit \
+docker run -d \
   --name bacnet-mcp \
   --restart=always \
   -p 8080:8000 \
   --env-file .env \
-  bacnet-mcp
+  ghcr.io/ezhuk/bacnet-mcp:latest
 ```
 
 This maps port 8080 on the host to the MCP server's port 8000 inside the container and loads settings from the `.env` file, if present.
