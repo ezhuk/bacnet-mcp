@@ -20,6 +20,14 @@ jobs:
           registry: ghcr.io
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
+      - name: Metadata
+        id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images: ghcr.io/ezhuk/bacnet-mcp
+          tags: |
+            type=semver,pattern={{version}}
+            type=semver,pattern=latest
       - uses: docker/setup-buildx-action@v3
       - uses: docker/build-push-action@v6
         with:
@@ -27,6 +35,4 @@ jobs:
           cache-to: type=gha,mode=max
           context: .
           push: true
-          tags: |
-            ghcr.io/ezhuk/bacnet-mcp:latest
-            ghcr.io/ezhuk/bacnet-mcp:${{ github.ref_name[1:] }}
+          tags: ${{ steps.meta.outputs.tags }}
