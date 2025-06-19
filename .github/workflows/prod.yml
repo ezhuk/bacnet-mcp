@@ -29,4 +29,4 @@ jobs:
           push: true
           tags: |
             ghcr.io/ezhuk/bacnet-mcp:latest
-            ghcr.io/ezhuk/bacnet-mcp:${{ github.ref_name }}
+            ghcr.io/ezhuk/bacnet-mcp:${{ github.ref_name[1:] }}
