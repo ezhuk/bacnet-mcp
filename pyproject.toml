@@ -1,7 +1,7 @@
 [project]
 name = "bacnet-mcp"
 version = "0.1.20"
-description = "Add your description here"
+description = "A Model Context Protocol (MCP) server for BACnet."
 readme = "README.md"
 requires-python = ">=3.13"
 dependencies = [
