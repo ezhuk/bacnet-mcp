@@ -21,6 +21,5 @@ jobs:
           python-version-file: .python-version
       - run: |
           uv sync
-          uv run ruff format src
-          uv run ruff check src
+          uv run pre-commit run --all-files
           uv run pytest
