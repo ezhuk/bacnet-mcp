@@ -112,7 +112,7 @@ async def write_property(
 async def who_is(
     low: int,
     high: int,
-) -> [str]:
+) -> list[str]:
     """Sends a 'who-is' broadcast message."""
     args = SimpleArgumentParser().parse_args()
     app = Application().from_args(args)
@@ -133,7 +133,7 @@ async def who_has(
     low: int,
     high: int,
     obj: str,
-) -> [str]:
+) -> list[str]:
     """Sends a 'who-has' broadcast message."""
     args = SimpleArgumentParser().parse_args()
     app = Application().from_args(args)
