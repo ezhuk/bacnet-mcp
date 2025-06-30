@@ -1,10 +1,7 @@
-"""A lightweight BACnet MCP server."""
+from importlib.metadata import version
 
-import asyncio
-
-from .server import mcp
+from bacnet_mcp.server import BACnetMCP
 
 
-def main() -> None:
-    """Run the MCP server via streamable-http transport."""
-    asyncio.run(mcp.run_async(transport="streamable-http"))
+__version__ = version("bacnet-mcp")
+__all__ = ["BACnetMCP"]

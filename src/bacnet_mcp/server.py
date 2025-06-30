@@ -1,42 +1,14 @@
-"""A lightweigth MCP server for the BACnet protocol."""
-
 from bacpypes3.app import Application
 from bacpypes3.argparse import SimpleArgumentParser
 from fastmcp import FastMCP
 from fastmcp.server.auth import BearerAuthProvider
 from fastmcp.prompts.prompt import Message
 from fastmcp.resources import ResourceTemplate
-from fastmcp.tools import Tool
-from pydantic import BaseModel
-from pydantic_settings import BaseSettings, SettingsConfigDict
-from typing import Optional
 
-
-class Auth(BaseModel):
-    key: Optional[str] = None
-
-
-class BACnet(BaseModel):
-    host: str = "127.0.0.1"
-    port: int = 47808
-
-
-class Settings(BaseSettings):
-    auth: Auth = Auth()
-    bacnet: BACnet = BACnet()
-    model_config = SettingsConfigDict(
-        env_file=".env", env_file_encoding="utf-8", env_nested_delimiter="__"
-    )
+from bacnet_mcp.settings import Settings
 
 
 settings = Settings()
-
-mcp = FastMCP(
-    name="BACnet MCP Server",
-    auth=(
-        BearerAuthProvider(public_key=settings.auth.key) if settings.auth.key else None
-    ),
-)
 
 
 async def read_property(
@@ -61,31 +33,6 @@ async def read_property(
             app.close()
 
 
-mcp.add_template(
-    ResourceTemplate.from_function(
-        fn=read_property, uri_template="udp://{host}:{port}/{obj}/{instance}/{prop}"
-    )
-)
-
-mcp.add_tool(
-    Tool.from_function(
-        fn=read_property,
-        annotations={
-            "title": "Read Property",
-            "readOnlyHint": True,
-            "openWorldHint": True,
-        },
-    )
-)
-
-
-@mcp.tool(
-    annotations={
-        "title": "Write Property",
-        "readOnlyHint": False,
-        "openWorldHint": True,
-    }
-)
 async def write_property(
     host: str = settings.bacnet.host,
     port: int = settings.bacnet.port,
@@ -106,9 +53,6 @@ async def write_property(
             app.close()
 
 
-@mcp.tool(
-    annotations={"title": "Send Who-Is", "readOnlyHint": True, "openWorldHint": True}
-)
 async def who_is(
     low: int,
     high: int,
@@ -126,9 +70,6 @@ async def who_is(
             app.close()
 
 
-@mcp.tool(
-    annotations={"title": "Send Who-Has", "readOnlyHint": True, "openWorldHint": True}
-)
 async def who_has(
     low: int,
     high: int,
@@ -147,7 +88,6 @@ async def who_has(
             app.close()
 
 
-@mcp.prompt(name="bacnet_help", tags={"bacnet", "help"})
 def bacnet_help() -> list[Message]:
     """Provides examples of how to use the BACnet MCP server."""
     return [
@@ -159,7 +99,6 @@ def bacnet_help() -> list[Message]:
     ]
 
 
-@mcp.prompt(name="bacnet_error", tags={"bacnet", "error"})
 def bacnet_error(error: str | None = None) -> list[Message]:
     """Asks the user how to handle an error."""
     return (
@@ -170,3 +109,62 @@ def bacnet_error(error: str | None = None) -> list[Message]:
         if error
         else []
     )
+
+
+class BACnetMCP(FastMCP):
+    def __init__(self, **kwargs):
+        super().__init__(
+            name="BACnet MCP Server",
+            auth=(
+                BearerAuthProvider(public_key=settings.auth.key)
+                if settings.auth.key
+                else None
+            ),
+            **kwargs,
+        )
+
+        self.add_template(
+            ResourceTemplate.from_function(
+                fn=read_property,
+                uri_template="udp://{host}:{port}/{obj}/{instance}/{prop}",
+            )
+        )
+
+        self.tool(
+            read_property,
+            annotations={
+                "title": "Read Property",
+                "readOnlyHint": True,
+                "openWorldHint": True,
+            },
+        )
+
+        self.tool(
+            write_property,
+            annotations={
+                "title": "Write Property",
+                "readOnlyHint": False,
+                "openWorldHint": True,
+            },
+        )
+
+        self.tool(
+            who_is,
+            annotations={
+                "title": "Send Who-Is",
+                "readOnlyHint": True,
+                "openWorldHint": True,
+            },
+        )
+
+        self.tool(
+            who_has,
+            annotations={
+                "title": "Send Who-Has",
+                "readOnlyHint": True,
+                "openWorldHint": True,
+            },
+        )
+
+        self.prompt(bacnet_error, name="bacnet_error", tags={"bacnet", "error"})
+        self.prompt(bacnet_help, name="bacnet_help", tags={"bacnet", "help"})
