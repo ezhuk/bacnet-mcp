@@ -1,11 +1,7 @@
-"""Server tests."""
-
 import pytest
 
 from fastmcp import Client
 from pydantic import AnyUrl
-
-from bacnet_mcp.server import mcp
 
 
 @pytest.mark.asyncio
@@ -16,7 +12,7 @@ from bacnet_mcp.server import mcp
         ("binaryValue/1/presentValue", "1"),
     ],
 )
-async def test_read_property(server, prop, expected):
+async def test_read_property(server, mcp, prop, expected):
     """Test read_property resource."""
     async with Client(mcp) as client:
         result = await client.read_resource(
@@ -27,7 +23,7 @@ async def test_read_property(server, prop, expected):
 
 
 @pytest.mark.asyncio
-async def test_write_property(server):
+async def test_write_property(server, mcp):
     """Test write_property tool."""
     async with Client(mcp) as client:
         result = await client.call_tool(
@@ -45,7 +41,7 @@ async def test_write_property(server):
 
 
 @pytest.mark.asyncio
-async def test_help_prompt():
+async def test_help_prompt(mcp):
     """Test help prompt."""
     async with Client(mcp) as client:
         result = await client.get_prompt("bacnet_help", {})
@@ -53,7 +49,7 @@ async def test_help_prompt():
 
 
 @pytest.mark.asyncio
-async def test_error_prompt():
+async def test_error_prompt(mcp):
     """Test error prompt."""
     async with Client(mcp) as client:
         result = await client.get_prompt(

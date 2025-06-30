@@ -1,5 +1,3 @@
-"""Test Fixtures."""
-
 import asyncio
 import pytest
 import threading
@@ -9,6 +7,8 @@ from bacpypes3.app import Application
 from bacpypes3.local.analog import AnalogValueObject
 from bacpypes3.local.binary import BinaryValueObject
 from pydantic import BaseModel
+
+from bacnet_mcp.server import BACnetMCP
 
 
 class Config(BaseModel):
@@ -57,3 +57,8 @@ def server():
     )
     thread.start()
     yield config
+
+
+@pytest.fixture(scope="session")
+def mcp():
+    return BACnetMCP()
