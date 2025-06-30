@@ -1,6 +1,6 @@
 [project]
 name = "bacnet-mcp"
-version = "0.1.22"
+version = "0.2.0"
 description = "A Model Context Protocol (MCP) server for BACnet."
 readme = "README.md"
 requires-python = ">=3.13"
@@ -8,10 +8,11 @@ dependencies = [
     "bacpypes3>=0.0.102",
     "fastmcp>=2.9.2",
     "pydantic-settings>=2.10.0",
+    "typer>=0.16.0",
 ]
 
 [project.scripts]
-bacnet-mcp = "bacnet_mcp:main"
+bacnet-mcp = "bacnet_mcp.cli:app"
 
 [build-system]
 requires = ["hatchling"]

@@ -38,12 +38,13 @@ wheels = [
 
 [[package]]
 name = "bacnet-mcp"
-version = "0.1.22"
+version = "0.2.0"
 source = { editable = "." }
 dependencies = [
     { name = "bacpypes3" },
     { name = "fastmcp" },
     { name = "pydantic-settings" },
+    { name = "typer" },
 ]
 
 [package.dev-dependencies]
@@ -59,6 +60,7 @@ requires-dist = [
     { name = "bacpypes3", specifier = ">=0.0.102" },
     { name = "fastmcp", specifier = ">=2.9.2" },
     { name = "pydantic-settings", specifier = ">=2.10.0" },
+    { name = "typer", specifier = ">=0.16.0" },
 ]
 
 [package.metadata.requires-dev]
