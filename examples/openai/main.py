@@ -1,14 +1,33 @@
 import asyncio
 import os
 
+from contextlib import suppress
 from openai import AsyncOpenAI
 from pydantic import BaseModel
 from pydantic_settings import BaseSettings, SettingsConfigDict
-from typing import Optional
+
+from bacnet_mcp import BACnetMCP
+
+
+class BACnetMCPRunner:
+    def __init__(self):
+        self._mcp = BACnetMCP()
+        self._task: asyncio.Task | None = None
+
+    async def __aenter__(self):
+        self._task = asyncio.create_task(self._mcp.run_async(transport="http"))
+        await asyncio.sleep(3.0)
+        return self._mcp
+
+    async def __aexit__(self, exc_type, exc, tb):
+        if self._task:
+            self._task.cancel()
+            with suppress(asyncio.CancelledError):
+                await self._task
 
 
 class Auth(BaseModel):
-    key: Optional[str] = None
+    key: str | None = None
 
 
 class Server(BaseModel):
@@ -50,14 +69,14 @@ async def create_response(msg):
 
 
 async def main():
-    resp = await create_response("Read the presentValue property of analogInput,1.")
-    print(resp.output_text)
-
-    resp = await create_response("Write the value 42 to analogValue instance 1.")
-    print(resp.output_text)
-
-    resp = await create_response("Set the presentValue of binaryOutput 3 to True.")
-    print(resp.output_text)
+    async with BACnetMCPRunner():
+        for prompt in [
+            "Read the presentValue property of analogInput,1.",
+            "Write the value 42 to analogValue instance 1.",
+            "Set the presentValue of binaryOutput 3 to True.",
+        ]:
+            resp = await create_response(prompt)
+            print(resp.output_text)
 
 
 if __name__ == "__main__":
