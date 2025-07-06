@@ -18,6 +18,12 @@ cd bacnet-mcp/examples/pydantic-ai
 uv sync
 ```
 
+Start the BACnet MCP server in a separate terminal window and leave it running.
+
+```bash
+uv run bacnet-mcp
+```
+
 Make sure the `OPENAI_API_KEY` environment variable is set and run the example.
 
 ```bash
