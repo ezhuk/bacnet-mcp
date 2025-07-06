@@ -13,20 +13,14 @@ async def run(mcp_server: MCPServer):
         model_settings=ModelSettings(tool_choice="required"),
     )
 
-    message = "Read the presentValue property of analogInput,1."
-    print(f"Running: {message}")
-    result = await Runner.run(starting_agent=agent, input=message)
-    print(result.final_output)
-
-    message = "Write the value 42 to analogValue instance 1."
-    print(f"Running: {message}")
-    result = await Runner.run(starting_agent=agent, input=message)
-    print(result.final_output)
-
-    message = "Set the presentValue of binaryOutput 3 to True."
-    print(f"Running: {message}")
-    result = await Runner.run(starting_agent=agent, input=message)
-    print(result.final_output)
+    for prompt in [
+        "Read the presentValue property of analogInput,1.",
+        "Write the value 42 to analogValue instance 1.",
+        "Set the presentValue of binaryOutput 3 to True.",
+    ]:
+        print(f"Running: {prompt}")
+        result = await Runner.run(starting_agent=agent, input=prompt)
+        print(result.final_output)
 
 
 async def main():

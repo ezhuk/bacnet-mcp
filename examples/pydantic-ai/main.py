@@ -17,11 +17,12 @@ async def main():
     )
 
     async with agent.run_mcp_servers():
-        resp = await agent.run("Read the presentValue property of analogInput,1.")
-        print(resp.output)
-
-        resp = await agent.run("Write the value 42 to analogValue instance 1.")
-        print(resp.output)
+        for prompt in [
+            "Read the presentValue property of analogInput,1.",
+            "Write the value 42 to analogValue instance 1.",
+        ]:
+            resp = await agent.run(prompt)
+            print(resp.output)
 
 
 if __name__ == "__main__":
