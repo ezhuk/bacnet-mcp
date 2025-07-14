@@ -6,11 +6,14 @@ on:
   pull_request:
     branches: [main]
     types: [opened, synchronize]
+  push:
+    branches: [main]
 
 jobs:
   build:
     permissions:
       contents: read
+      id-token: write
     runs-on: ubuntu-latest
 
     steps:
@@ -22,4 +25,7 @@ jobs:
       - run: |
           uv sync
           uv run pre-commit run --all-files
-          uv run pytest
+          uv run pytest --cov=bacnet_mcp --cov-report=xml
+      - uses: codecov/codecov-action@v5
+        with:
+          use_oidc: true

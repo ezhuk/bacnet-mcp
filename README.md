@@ -1,9 +1,10 @@
 ## BACnet MCP Server
 
-A lightweight [Model Context Protocol (MCP)](https://modelcontextprotocol.io) server that connects LLM agents to [BACnet](https://en.wikipedia.org/wiki/BACnet) devices in a secure, standardized way, enabling seamless integration of AI-driven workflows with Building Automation (BAS), Building Management (BMS) and Industrial Control (ICS) systems, allowing agents to monitor real-time sensor data, actuate devices, and orchestrate complex automation tasks.
-
 [![test](https://github.com/ezhuk/bacnet-mcp/actions/workflows/test.yml/badge.svg)](https://github.com/ezhuk/bacnet-mcp/actions/workflows/test.yml)
+[![codecov](https://codecov.io/github/ezhuk/bacnet-mcp/graph/badge.svg?token=Y3N4ABR3WX)](https://codecov.io/github/ezhuk/bacnet-mcp)
 [![PyPI - Version](https://img.shields.io/pypi/v/bacnet-mcp.svg)](https://pypi.org/p/bacnet-mcp)
+
+A lightweight [Model Context Protocol (MCP)](https://modelcontextprotocol.io) server that connects LLM agents to [BACnet](https://en.wikipedia.org/wiki/BACnet) devices in a secure, standardized way, enabling seamless integration of AI-driven workflows with Building Automation (BAS), Building Management (BMS) and Industrial Control (ICS) systems, allowing agents to monitor real-time sensor data, actuate devices, and orchestrate complex automation tasks.
 
 ## Getting Started
 
