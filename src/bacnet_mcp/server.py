@@ -19,7 +19,7 @@ async def read_property(
     prop: str = "presentValue",
 ) -> str:
     """Reads the content of a BACnet object property on a remote unit."""
-    args = SimpleArgumentParser().parse_args()
+    args = SimpleArgumentParser().parse_args(args=[])
     app = Application().from_args(args)
     try:
         res = await app.read_property(f"{host}:{port}", f"{obj},{instance}", f"{prop}")
@@ -41,7 +41,7 @@ async def write_property(
     data: str = "1.0",
 ) -> str:
     """Writes a BACnet object property on a remote device."""
-    args = SimpleArgumentParser().parse_args()
+    args = SimpleArgumentParser().parse_args(args=[])
     app = Application().from_args(args)
     try:
         await app.write_property(f"{host}:{port}", f"{obj}", f"{prop}", f"{data}")
