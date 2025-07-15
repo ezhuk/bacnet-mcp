@@ -58,7 +58,7 @@ async def who_is(
     high: int,
 ) -> list[str]:
     """Sends a 'who-is' broadcast message."""
-    args = SimpleArgumentParser().parse_args()
+    args = SimpleArgumentParser().parse_args(args=[])
     app = Application().from_args(args)
     try:
         res = await app.who_is(low, high)
@@ -76,7 +76,7 @@ async def who_has(
     obj: str,
 ) -> list[str]:
     """Sends a 'who-has' broadcast message."""
-    args = SimpleArgumentParser().parse_args()
+    args = SimpleArgumentParser().parse_args(args=[])
     app = Application().from_args(args)
     try:
         res = await app.who_has(low, high, obj)
