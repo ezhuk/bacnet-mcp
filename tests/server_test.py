@@ -41,6 +41,31 @@ async def test_write_property(server, mcp):
 
 
 @pytest.mark.asyncio
+async def test_who_is(server, mcp):
+    """Test who_is tool."""
+    async with Client(mcp) as client:
+        result = await client.call_tool(
+            "who_is",
+            {
+                "low": 999,
+                "high": 1001,
+            },
+        )
+        assert not result.is_error
+
+
+@pytest.mark.asyncio
+async def test_who_has(server, mcp):
+    """Test who_has tool."""
+    async with Client(mcp) as client:
+        result = await client.call_tool(
+            "who_has",
+            {"low": 999, "high": 1001, "obj": "analogValue,1"},
+        )
+        assert not result.is_error
+
+
+@pytest.mark.asyncio
 async def test_help_prompt(mcp):
     """Test help prompt."""
     async with Client(mcp) as client:
