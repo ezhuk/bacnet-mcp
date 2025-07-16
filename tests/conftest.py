@@ -62,3 +62,14 @@ def server():
 @pytest.fixture(scope="session")
 def mcp():
     return BACnetMCP()
+
+
+@pytest.fixture()
+def cli(monkeypatch):
+    async def dummy_run_async(self, transport):
+        return
+
+    monkeypatch.setattr(
+        "bacnet_mcp.cli.BACnetMCP.run_async",
+        dummy_run_async,
+    )
