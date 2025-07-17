@@ -6,14 +6,16 @@ from fastmcp.prompts.prompt import Message
 from fastmcp.resources import ResourceTemplate
 
 from bacnet_mcp.settings import Settings
+from bacnet_mcp.utils import get_device
 
 
 settings = Settings()
 
 
 async def read_property(
-    host: str = settings.bacnet.host,
-    port: int = settings.bacnet.port,
+    name: str | None = None,
+    host: str | None = None,
+    port: int | None = None,
     obj: str = "analogValue",
     instance: str = "1",
     prop: str = "presentValue",
@@ -22,6 +24,7 @@ async def read_property(
     args = SimpleArgumentParser().parse_args(args=[])
     app = Application().from_args(args)
     try:
+        host, port = get_device(settings, name, host, port)
         res = await app.read_property(f"{host}:{port}", f"{obj},{instance}", f"{prop}")
         return res
     except Exception as e:
@@ -34,8 +37,9 @@ async def read_property(
 
 
 async def write_property(
-    host: str = settings.bacnet.host,
-    port: int = settings.bacnet.port,
+    name: str | None = None,
+    host: str | None = None,
+    port: int | None = None,
     obj: str = "analogValue,1",
     prop: str = "presentValue",
     data: str = "1.0",
@@ -44,6 +48,7 @@ async def write_property(
     args = SimpleArgumentParser().parse_args(args=[])
     app = Application().from_args(args)
     try:
+        host, port = get_device(settings, name, host, port)
         await app.write_property(f"{host}:{port}", f"{obj}", f"{prop}", f"{data}")
         return f"Write to {obj} {prop} on {host}:{port} has succedeed"
     except Exception as e:

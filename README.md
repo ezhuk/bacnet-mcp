@@ -51,8 +51,19 @@ These settings can also be specified in a `.env` file in the working directory.
 
 ```text
 # .env
-bacnet__host=10.0.0.1
-bacnet__port=47808
+bacnet_mcp_bacnet__host=10.0.0.1
+bacnet_mcp_bacnet__port=47808
+```
+
+When interacting with multiple devices, each device’s connection parameters (`host`, `port`) can be defined with a unique `name` in a `devices.json` file in the working directory. Prompts can then refer to devices by `name`.
+
+```json
+{
+  "devices": [
+    {"name": "Boiler", "host": "10.0.0.3", "port": 47808},
+    {"name": "Valve", "host": "10.0.0.4", "port": 47808}
+  ]
+}
 ```
 
 ### MCP Inspector
