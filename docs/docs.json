@@ -36,7 +36,8 @@
             "group": "Examples",
             "pages": [
               "bacnet-mcp/openai",
-              "bacnet-mcp/openai-agents"
+              "bacnet-mcp/openai-agents",
+              "bacnet-mcp/pydanticai"
             ]
           }
         ]
