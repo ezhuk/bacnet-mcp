@@ -10,6 +10,8 @@ from pydantic import BaseModel
 
 from bacnet_mcp.server import BACnetMCP
 
+import bacnet_mcp.server as server_mod
+
 
 class Config(BaseModel):
     host: str = "127.0.0.1"
@@ -64,7 +66,20 @@ def mcp():
     return BACnetMCP()
 
 
-@pytest.fixture()
+@pytest.fixture
+def mcp_error(monkeypatch):
+    async def who_has(low: int, high: int, obj: str):
+        raise RuntimeError("who_has_failed")
+
+    async def who_is(low: int, high: int):
+        raise RuntimeError("who_is_failed")
+
+    monkeypatch.setattr(server_mod, "who_has", who_has)
+    monkeypatch.setattr(server_mod, "who_is", who_is)
+    return server_mod.BACnetMCP()
+
+
+@pytest.fixture
 def cli(monkeypatch):
     async def dummy_run_async(self, transport):
         return

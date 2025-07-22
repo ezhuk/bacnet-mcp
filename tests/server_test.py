@@ -1,6 +1,7 @@
 import pytest
 
 from fastmcp import Client
+from fastmcp.exceptions import ToolError
 from pydantic import AnyUrl
 
 
@@ -55,6 +56,22 @@ async def test_who_is(server, mcp):
 
 
 @pytest.mark.asyncio
+async def test_who_is_error(server, mcp_error):
+    """Test who_is tool error condition."""
+    async with Client(mcp_error) as client:
+        with pytest.raises(ToolError) as ex:
+            result = await client.call_tool(
+                "who_is",
+                {
+                    "low": 999,
+                    "high": 1001,
+                },
+            )
+            assert result.is_error
+            assert "who_is_failed" in str(ex.value)
+
+
+@pytest.mark.asyncio
 async def test_who_has(server, mcp):
     """Test who_has tool."""
     async with Client(mcp) as client:
@@ -63,6 +80,19 @@ async def test_who_has(server, mcp):
             {"low": 999, "high": 1001, "obj": "analogValue,1"},
         )
         assert not result.is_error
+
+
+@pytest.mark.asyncio
+async def test_who_has_error(server, mcp_error):
+    """Test who_has tool error condition."""
+    async with Client(mcp_error) as client:
+        with pytest.raises(ToolError) as ex:
+            result = await client.call_tool(
+                "who_has",
+                {"low": 999, "high": 1001, "obj": "analogValue,1"},
+            )
+            assert result.is_error
+            assert "who_has_failed" in str(ex.value)
 
 
 @pytest.mark.asyncio
