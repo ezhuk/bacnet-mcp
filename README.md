@@ -129,7 +129,7 @@ async def write_property(
 
 ### Authentication
 
-To enable Bearer Token authentication for the `Streamable HTTP` transport, provide the RSA public key in PEM format in the `.env` file. Check out the [Bearer Token Authentication](https://gofastmcp.com/servers/auth/bearer) section for more details.
+To enable authentication using the built-in [AuthKit](https://www.authkit.com) provider for the `Streamable HTTP` transport, provide the AuthKit domain and redirect URL in the `.env` file. Check out the [AuthKit Provider](https://gofastmcp.com/servers/auth/remote-oauth#example%3A-workos-authkit-provider) section for more details.
 
 ### Interactive Prompts
 
