@@ -1,7 +1,7 @@
 from bacpypes3.app import Application
 from bacpypes3.argparse import SimpleArgumentParser
 from fastmcp import FastMCP
-from fastmcp.server.auth import BearerAuthProvider
+from fastmcp.server.auth.providers.workos import AuthKitProvider
 from fastmcp.prompts.prompt import Message
 from fastmcp.resources import ResourceTemplate
 
@@ -121,8 +121,10 @@ class BACnetMCP(FastMCP):
         super().__init__(
             name="BACnet MCP Server",
             auth=(
-                BearerAuthProvider(public_key=settings.auth.key)
-                if settings.auth.key
+                AuthKitProvider(
+                    authkit_domain=settings.auth.domain, base_url=settings.auth.url
+                )
+                if settings.auth.domain and settings.auth.url
                 else None
             ),
             **kwargs,

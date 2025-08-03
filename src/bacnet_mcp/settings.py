@@ -8,7 +8,8 @@ from pydantic_settings import (
 
 
 class Auth(BaseModel):
-    key: str | None = None
+    domain: str | None = None
+    url: str | None = None
 
 
 class BACnet(BaseModel):
