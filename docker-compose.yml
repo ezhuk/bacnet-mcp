@@ -4,3 +4,8 @@ services:
     ports:
       - "8080:8000"
     restart: unless-stopped
+    env_file:
+      - .env
+    environment:
+      - bacnet_mcp_bacnet__host=${bacnet_mcp_bacnet__host:-127.0.0.1}
+      - bacnet_mcp_bacnet__port=${bacnet_mcp_bacnet__port:-47808}
