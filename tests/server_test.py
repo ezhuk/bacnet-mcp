@@ -10,7 +10,7 @@ from pydantic import AnyUrl
     "prop,expected",
     [
         ("analogValue/1/presentValue", "5.0"),
-        ("binaryValue/1/presentValue", "1"),
+        ("binaryValue/1/presentValue", "active"),
     ],
 )
 async def test_read_property(server, mcp, prop, expected):
