@@ -26,7 +26,7 @@ async def read_property(
     try:
         host, port = get_device(settings, name, host, port)
         res = await app.read_property(f"{host}:{port}", f"{obj},{instance}", f"{prop}")
-        return res
+        return str(res)
     except Exception as e:
         raise RuntimeError(
             f"Could not read {obj},{instance} {prop} from {host}:{port}"
