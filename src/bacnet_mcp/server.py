@@ -1,6 +1,7 @@
 from bacpypes3.app import Application
 from bacpypes3.argparse import SimpleArgumentParser
-from fastmcp import FastMCP
+from fastmcp import FastMCP, Context
+from fastmcp.server.lifespan import lifespan
 from fastmcp.server.auth.providers.workos import AuthKitProvider
 from fastmcp.prompts.prompt import Message
 from fastmcp.resources import ResourceTemplate
@@ -9,10 +10,21 @@ from bacnet_mcp.settings import Settings
 from bacnet_mcp.utils import get_device
 
 
+@lifespan
+async def app_lifespan(server: FastMCP):
+    args = SimpleArgumentParser().parse_args(args=[])
+    app = Application().from_args(args)
+    try:
+        yield {"app": app}
+    finally:
+        app.close()
+
+
 settings = Settings()
 
 
 async def read_property(
+    ctx: Context,
     name: str | None = None,
     host: str | None = None,
     port: int | None = None,
@@ -21,9 +33,8 @@ async def read_property(
     prop: str = "presentValue",
 ) -> str:
     """Reads the content of a BACnet object property on a remote unit."""
-    args = SimpleArgumentParser().parse_args(args=[])
-    app = Application().from_args(args)
     try:
+        app: Application = ctx.lifespan_context.get("app")
         host, port = get_device(settings, name, host, port)
         res = await app.read_property(f"{host}:{port}", f"{obj},{instance}", f"{prop}")
         return str(res)
@@ -31,12 +42,10 @@ async def read_property(
         raise RuntimeError(
             f"Could not read {obj},{instance} {prop} from {host}:{port}"
         ) from e
-    finally:
-        if app:
-            app.close()
 
 
 async def write_property(
+    ctx: Context,
     name: str | None = None,
     host: str | None = None,
     port: int | None = None,
@@ -45,52 +54,42 @@ async def write_property(
     data: str = "1.0",
 ) -> str:
     """Writes a BACnet object property on a remote device."""
-    args = SimpleArgumentParser().parse_args(args=[])
-    app = Application().from_args(args)
     try:
+        app: Application = ctx.lifespan_context.get("app")
         host, port = get_device(settings, name, host, port)
         await app.write_property(f"{host}:{port}", f"{obj}", f"{prop}", f"{data}")
         return f"Write to {obj} {prop} on {host}:{port} has succedeed"
     except Exception as e:
         raise RuntimeError(f"{e}") from e
-    finally:
-        if app:
-            app.close()
 
 
 async def who_is(
+    ctx: Context,
     low: int,
     high: int,
 ) -> list[str]:
     """Sends a 'who-is' broadcast message."""
-    args = SimpleArgumentParser().parse_args(args=[])
-    app = Application().from_args(args)
     try:
+        app: Application = ctx.lifespan_context.get("app")
         res = await app.who_is(low, high)
         return [str(x.iAmDeviceIdentifier) for x in res]
     except Exception as e:
         raise RuntimeError(f"{e}") from e
-    finally:
-        if app:
-            app.close()
 
 
 async def who_has(
+    ctx: Context,
     low: int,
     high: int,
     obj: str,
 ) -> list[str]:
     """Sends a 'who-has' broadcast message."""
-    args = SimpleArgumentParser().parse_args(args=[])
-    app = Application().from_args(args)
     try:
+        app: Application = ctx.lifespan_context.get("app")
         res = await app.who_has(low, high, obj)
         return [str(x.deviceIdentifier) for x in res]
     except Exception as e:
         raise RuntimeError(f"{e}") from e
-    finally:
-        if app:
-            app.close()
 
 
 def bacnet_help() -> list[Message]:
