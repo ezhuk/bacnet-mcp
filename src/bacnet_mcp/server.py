@@ -119,6 +119,7 @@ class BACnetMCP(FastMCP):
     def __init__(self, **kwargs):
         super().__init__(
             name="BACnet MCP Server",
+            lifespan=app_lifespan,
             auth=(
                 AuthKitProvider(
                     authkit_domain=settings.auth.domain, base_url=settings.auth.url
