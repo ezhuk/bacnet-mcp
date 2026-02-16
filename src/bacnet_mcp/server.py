@@ -12,15 +12,13 @@ from bacnet_mcp.utils import get_device
 
 @lifespan
 async def app_lifespan(server: FastMCP):
+    settings = server.settings
     args = SimpleArgumentParser().parse_args(args=[])
     app = Application().from_args(args)
     try:
-        yield {"app": app}
+        yield {"settings": settings, "app": app}
     finally:
         app.close()
-
-
-settings = Settings()
 
 
 async def read_property(
@@ -34,6 +32,7 @@ async def read_property(
 ) -> str:
     """Reads the content of a BACnet object property on a remote unit."""
     try:
+        settings: Settings = ctx.lifespan_context.get("settings")
         app: Application = ctx.lifespan_context.get("app")
         host, port = get_device(settings, name, host, port)
         res = await app.read_property(f"{host}:{port}", f"{obj},{instance}", f"{prop}")
@@ -55,6 +54,7 @@ async def write_property(
 ) -> str:
     """Writes a BACnet object property on a remote device."""
     try:
+        settings: Settings = ctx.lifespan_context.get("settings")
         app: Application = ctx.lifespan_context.get("app")
         host, port = get_device(settings, name, host, port)
         await app.write_property(f"{host}:{port}", f"{obj}", f"{prop}", f"{data}")
@@ -117,14 +117,16 @@ def bacnet_error(error: str | None = None) -> list[Message]:
 
 class BACnetMCP(FastMCP):
     def __init__(self, **kwargs):
+        self.settings = Settings()
         super().__init__(
             name="BACnet MCP Server",
             lifespan=app_lifespan,
             auth=(
                 AuthKitProvider(
-                    authkit_domain=settings.auth.domain, base_url=settings.auth.url
+                    authkit_domain=self.settings.auth.domain,
+                    base_url=self.settings.auth.url,
                 )
-                if settings.auth.domain and settings.auth.url
+                if self.settings.auth.domain and self.settings.auth.url
                 else None
             ),
             **kwargs,
