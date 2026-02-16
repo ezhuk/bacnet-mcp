@@ -1,6 +1,6 @@
 [project]
 name = "bacnet-mcp"
-version = "0.3.0"
+version = "0.3.1"
 description = "A Model Context Protocol (MCP) server for BACnet."
 readme = "README.md"
 requires-python = ">=3.13"
