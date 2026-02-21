@@ -12,84 +12,13 @@ from bacnet_mcp.utils import get_device
 
 @lifespan
 async def app_lifespan(server: FastMCP):
-    settings = server.settings
     args = SimpleArgumentParser().parse_args(args=[])
     app = Application().from_args(args)
     try:
-        yield {"settings": settings, "app": app}
+        server.app = app
+        yield {}
     finally:
         app.close()
-
-
-async def read_property(
-    ctx: Context,
-    name: str | None = None,
-    host: str | None = None,
-    port: int | None = None,
-    obj: str = "analogValue",
-    instance: str = "1",
-    prop: str = "presentValue",
-) -> str:
-    """Reads the content of a BACnet object property on a remote unit."""
-    try:
-        settings: Settings = ctx.lifespan_context.get("settings")
-        app: Application = ctx.lifespan_context.get("app")
-        host, port = get_device(settings, name, host, port)
-        res = await app.read_property(f"{host}:{port}", f"{obj},{instance}", f"{prop}")
-        return str(res)
-    except Exception as e:
-        raise RuntimeError(
-            f"Could not read {obj},{instance} {prop} from {host}:{port}"
-        ) from e
-
-
-async def write_property(
-    ctx: Context,
-    name: str | None = None,
-    host: str | None = None,
-    port: int | None = None,
-    obj: str = "analogValue,1",
-    prop: str = "presentValue",
-    data: str = "1.0",
-) -> str:
-    """Writes a BACnet object property on a remote device."""
-    try:
-        settings: Settings = ctx.lifespan_context.get("settings")
-        app: Application = ctx.lifespan_context.get("app")
-        host, port = get_device(settings, name, host, port)
-        await app.write_property(f"{host}:{port}", f"{obj}", f"{prop}", f"{data}")
-        return f"Write to {obj} {prop} on {host}:{port} has succedeed"
-    except Exception as e:
-        raise RuntimeError(f"{e}") from e
-
-
-async def who_is(
-    ctx: Context,
-    low: int,
-    high: int,
-) -> list[str]:
-    """Sends a 'who-is' broadcast message."""
-    try:
-        app: Application = ctx.lifespan_context.get("app")
-        res = await app.who_is(low, high)
-        return [str(x.iAmDeviceIdentifier) for x in res]
-    except Exception as e:
-        raise RuntimeError(f"{e}") from e
-
-
-async def who_has(
-    ctx: Context,
-    low: int,
-    high: int,
-    obj: str,
-) -> list[str]:
-    """Sends a 'who-has' broadcast message."""
-    try:
-        app: Application = ctx.lifespan_context.get("app")
-        res = await app.who_has(low, high, obj)
-        return [str(x.deviceIdentifier) for x in res]
-    except Exception as e:
-        raise RuntimeError(f"{e}") from e
 
 
 def bacnet_help() -> list[Message]:
@@ -117,6 +46,7 @@ def bacnet_error(error: str | None = None) -> list[Message]:
 
 class BACnetMCP(FastMCP):
     def __init__(self, **kwargs):
+        self.app: Application | None = None
         self.settings = Settings()
         super().__init__(
             name="BACnet MCP Server",
@@ -134,13 +64,13 @@ class BACnetMCP(FastMCP):
 
         self.add_template(
             ResourceTemplate.from_function(
-                fn=read_property,
+                fn=self.read_property,
                 uri_template="udp://{host}:{port}/{obj}/{instance}/{prop}",
             )
         )
 
         self.tool(
-            read_property,
+            self.read_property,
             annotations={
                 "title": "Read Property",
                 "readOnlyHint": True,
@@ -149,7 +79,7 @@ class BACnetMCP(FastMCP):
         )
 
         self.tool(
-            write_property,
+            self.write_property,
             annotations={
                 "title": "Write Property",
                 "readOnlyHint": False,
@@ -158,7 +88,7 @@ class BACnetMCP(FastMCP):
         )
 
         self.tool(
-            who_is,
+            self.who_is,
             annotations={
                 "title": "Send Who-Is",
                 "readOnlyHint": True,
@@ -167,7 +97,7 @@ class BACnetMCP(FastMCP):
         )
 
         self.tool(
-            who_has,
+            self.who_has,
             annotations={
                 "title": "Send Who-Has",
                 "readOnlyHint": True,
@@ -177,3 +107,73 @@ class BACnetMCP(FastMCP):
 
         self.prompt(bacnet_error, name="bacnet_error", tags={"bacnet", "error"})
         self.prompt(bacnet_help, name="bacnet_help", tags={"bacnet", "help"})
+
+
+    async def read_property(
+        self,
+        ctx: Context,
+        name: str | None = None,
+        host: str | None = None,
+        port: int | None = None,
+        obj: str = "analogValue",
+        instance: str = "1",
+        prop: str = "presentValue",
+    ) -> str:
+        """Reads the content of a BACnet object property on a remote unit."""
+        try:
+            host, port = get_device(self.settings, name, host, port)
+            res = await self.app.read_property(f"{host}:{port}", f"{obj},{instance}", f"{prop}")
+            return str(res)
+        except Exception as e:
+            raise RuntimeError(
+                f"Could not read {obj},{instance} {prop} from {host}:{port}"
+            ) from e
+
+
+    async def write_property(
+        self,
+        ctx: Context,
+        name: str | None = None,
+        host: str | None = None,
+        port: int | None = None,
+        obj: str = "analogValue,1",
+        prop: str = "presentValue",
+        data: str = "1.0",
+    ) -> str:
+        """Writes a BACnet object property on a remote device."""
+        try:
+            host, port = get_device(self.settings, name, host, port)
+            await self.app.write_property(f"{host}:{port}", f"{obj}", f"{prop}", f"{data}")
+            return f"Write to {obj} {prop} on {host}:{port} has succedeed"
+        except Exception as e:
+            raise RuntimeError(f"{e}") from e
+
+
+    async def who_is(
+        self,
+        ctx: Context,
+        low: int,
+        high: int,
+    ) -> list[str]:
+        """Sends a 'who-is' broadcast message."""
+        try:
+            res = await self.app.who_is(low, high)
+            return [str(x.iAmDeviceIdentifier) for x in res]
+        except Exception as e:
+            raise RuntimeError(f"{e}") from e
+
+
+    async def who_has(
+        self,
+        ctx: Context,
+        low: int,
+        high: int,
+        obj: str,
+    ) -> list[str]:
+        """Sends a 'who-has' broadcast message."""
+        try:
+            res = await self.app.who_has(low, high, obj)
+            return [str(x.deviceIdentifier) for x in res]
+        except Exception as e:
+            raise RuntimeError(f"{e}") from e
+
