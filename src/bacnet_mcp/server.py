@@ -21,33 +21,11 @@ async def app_lifespan(server: FastMCP):
         app.close()
 
 
-def bacnet_help() -> list[Message]:
-    """Provides examples of how to use the BACnet MCP server."""
-    return [
-        Message("Here are examples of how to read and write properties:"),
-        Message("Read the presentValue property of analog-input,1 at 10.0.0.4."),
-        Message("Fetch the units property of analog-input 2."),
-        Message("Write the value 42 to analog-value instance 1."),
-        Message("Set the presentValue of binary-output 3 to True."),
-    ]
-
-
-def bacnet_error(error: str | None = None) -> list[Message]:
-    """Asks the user how to handle an error."""
-    return (
-        [
-            Message(f"ERROR: {error!r}"),
-            Message("Would you like to retry, change parameters, or abort?"),
-        ]
-        if error
-        else []
-    )
-
-
 class BACnetMCP(FastMCP):
     def __init__(self, **kwargs):
         self.app: Application | None = None
         self.settings = Settings()
+
         super().__init__(
             name="BACnet MCP Server",
             lifespan=app_lifespan,
@@ -105,8 +83,8 @@ class BACnetMCP(FastMCP):
             },
         )
 
-        self.prompt(bacnet_error, name="bacnet_error", tags={"bacnet", "error"})
-        self.prompt(bacnet_help, name="bacnet_help", tags={"bacnet", "help"})
+        self.prompt(self.bacnet_error, name="bacnet_error", tags={"bacnet", "error"})
+        self.prompt(self.bacnet_help, name="bacnet_help", tags={"bacnet", "help"})
 
     def _app(self) -> Application:
         if self.app is None:
@@ -181,3 +159,24 @@ class BACnetMCP(FastMCP):
             return [str(x.deviceIdentifier) for x in res]
         except Exception as e:
             raise RuntimeError(f"{e}") from e
+
+    def bacnet_help(self) -> list[Message]:
+        """Provides examples of how to use the BACnet MCP server."""
+        return [
+            Message("Here are examples of how to read and write properties:"),
+            Message("Read the presentValue property of analog-input,1 at 10.0.0.4."),
+            Message("Fetch the units property of analog-input 2."),
+            Message("Write the value 42 to analog-value instance 1."),
+            Message("Set the presentValue of binary-output 3 to True."),
+        ]
+
+    def bacnet_error(self, error: str | None = None) -> list[Message]:
+        """Asks the user how to handle an error."""
+        return (
+            [
+                Message(f"ERROR: {error!r}"),
+                Message("Would you like to retry, change parameters, or abort?"),
+            ]
+            if error
+            else []
+        )
