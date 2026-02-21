@@ -68,14 +68,14 @@ def mcp():
 
 @pytest.fixture
 def mcp_error(monkeypatch):
-    async def who_has(low: int, high: int, obj: str):
+    async def who_has(self, ctx, low: int, high: int, obj: str):
         raise RuntimeError("who_has_failed")
 
-    async def who_is(low: int, high: int):
+    async def who_is(self, ctx, low: int, high: int):
         raise RuntimeError("who_is_failed")
 
-    monkeypatch.setattr(server_mod, "who_has", who_has)
-    monkeypatch.setattr(server_mod, "who_is", who_is)
+    monkeypatch.setattr(server_mod.BACnetMCP, "who_has", who_has)
+    monkeypatch.setattr(server_mod.BACnetMCP, "who_is", who_is)
     return server_mod.BACnetMCP()
 
 
