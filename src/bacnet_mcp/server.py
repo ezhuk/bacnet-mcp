@@ -108,7 +108,6 @@ class BACnetMCP(FastMCP):
         self.prompt(bacnet_error, name="bacnet_error", tags={"bacnet", "error"})
         self.prompt(bacnet_help, name="bacnet_help", tags={"bacnet", "help"})
 
-
     async def read_property(
         self,
         ctx: Context,
@@ -122,13 +121,14 @@ class BACnetMCP(FastMCP):
         """Reads the content of a BACnet object property on a remote unit."""
         try:
             host, port = get_device(self.settings, name, host, port)
-            res = await self.app.read_property(f"{host}:{port}", f"{obj},{instance}", f"{prop}")
+            res = await self.app.read_property(
+                f"{host}:{port}", f"{obj},{instance}", f"{prop}"
+            )
             return str(res)
         except Exception as e:
             raise RuntimeError(
                 f"Could not read {obj},{instance} {prop} from {host}:{port}"
             ) from e
-
 
     async def write_property(
         self,
@@ -143,11 +143,12 @@ class BACnetMCP(FastMCP):
         """Writes a BACnet object property on a remote device."""
         try:
             host, port = get_device(self.settings, name, host, port)
-            await self.app.write_property(f"{host}:{port}", f"{obj}", f"{prop}", f"{data}")
+            await self.app.write_property(
+                f"{host}:{port}", f"{obj}", f"{prop}", f"{data}"
+            )
             return f"Write to {obj} {prop} on {host}:{port} has succedeed"
         except Exception as e:
             raise RuntimeError(f"{e}") from e
-
 
     async def who_is(
         self,
@@ -162,7 +163,6 @@ class BACnetMCP(FastMCP):
         except Exception as e:
             raise RuntimeError(f"{e}") from e
 
-
     async def who_has(
         self,
         ctx: Context,
@@ -176,4 +176,3 @@ class BACnetMCP(FastMCP):
             return [str(x.deviceIdentifier) for x in res]
         except Exception as e:
             raise RuntimeError(f"{e}") from e
-
