@@ -108,6 +108,11 @@ class BACnetMCP(FastMCP):
         self.prompt(bacnet_error, name="bacnet_error", tags={"bacnet", "error"})
         self.prompt(bacnet_help, name="bacnet_help", tags={"bacnet", "help"})
 
+    def _app(self) -> Application:
+        if self.app is None:
+            raise RuntimeError("BACnet application not initialized")
+        return self.app
+
     async def read_property(
         self,
         ctx: Context,
@@ -121,7 +126,7 @@ class BACnetMCP(FastMCP):
         """Reads the content of a BACnet object property on a remote unit."""
         try:
             host, port = get_device(self.settings, name, host, port)
-            res = await self.app.read_property(
+            res = await self._app().read_property(
                 f"{host}:{port}", f"{obj},{instance}", f"{prop}"
             )
             return str(res)
@@ -143,7 +148,7 @@ class BACnetMCP(FastMCP):
         """Writes a BACnet object property on a remote device."""
         try:
             host, port = get_device(self.settings, name, host, port)
-            await self.app.write_property(
+            await self._app().write_property(
                 f"{host}:{port}", f"{obj}", f"{prop}", f"{data}"
             )
             return f"Write to {obj} {prop} on {host}:{port} has succedeed"
@@ -158,7 +163,7 @@ class BACnetMCP(FastMCP):
     ) -> list[str]:
         """Sends a 'who-is' broadcast message."""
         try:
-            res = await self.app.who_is(low, high)
+            res = await self._app().who_is(low, high)
             return [str(x.iAmDeviceIdentifier) for x in res]
         except Exception as e:
             raise RuntimeError(f"{e}") from e
@@ -172,7 +177,7 @@ class BACnetMCP(FastMCP):
     ) -> list[str]:
         """Sends a 'who-has' broadcast message."""
         try:
-            res = await self.app.who_has(low, high, obj)
+            res = await self._app().who_has(low, high, obj)
             return [str(x.deviceIdentifier) for x in res]
         except Exception as e:
             raise RuntimeError(f"{e}") from e
