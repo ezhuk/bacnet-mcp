@@ -14,6 +14,7 @@ async def test_read_object_list(server, mcp):
             {"host": server.host, "port": server.port, "instance": 1001},
         )
         assert len(result.content) == 1
+        assert "device" in result.content[0].text
 
 
 @pytest.mark.asyncio

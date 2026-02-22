@@ -6,7 +6,6 @@ from bacpypes3.argparse import SimpleArgumentParser
 from bacpypes3.app import Application
 from bacpypes3.local.analog import AnalogValueObject
 from bacpypes3.local.binary import BinaryValueObject
-from bacpypes3.local.device import DeviceObject
 from pydantic import BaseModel
 
 from bacnet_mcp.server import BACnetMCP
@@ -44,13 +43,6 @@ async def _server_main(config: Config) -> None:
                 description="Binary Value",
             )
         )
-        device = DeviceObject(
-            objectIdentifier=("device", 1001),
-            objectName="test-device",
-            vendorIdentifier=15,
-        )
-        device.objectList = [("analogValue", 1), ("binaryValue", 1), ("device", 1001)]
-        app.add_object(device)
         await asyncio.Future()
     except Exception as e:
         print(f"ERROR: {e}")
