@@ -48,6 +48,15 @@ class BACnetMCP(FastMCP):
         )
 
         self.tool(
+            self.read_object_list,
+            annotations={
+                "title": "Read Object List",
+                "readOnlyHint": True,
+                "openWorldHint": True,
+            },
+        )
+
+        self.tool(
             self.read_property,
             annotations={
                 "title": "Read Property",
@@ -90,6 +99,25 @@ class BACnetMCP(FastMCP):
         if self.app is None:
             raise RuntimeError("BACnet application not initialized")
         return self.app
+
+    async def read_object_list(
+        self,
+        name: str | None = None,
+        host: str | None = None,
+        port: int | None = None,
+        instance: int = 1001,
+    ) -> list[str]:
+        """Reads object list on a remote unit."""
+        try:
+            host, port = get_device(self.settings, name, host, port)
+            res = await self._app().read_property(
+                f"{host}:{port}", f"device,{instance}", "objectList"
+            )
+            return [str(x) for x in list(res)]
+        except Exception as e:
+            raise RuntimeError(
+                f"Could not read device,{instance} objectList from {host}:{port}"
+            ) from e
 
     async def read_property(
         self,
