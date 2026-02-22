@@ -25,6 +25,7 @@ async def _server_main(config: Config) -> None:
             ["--address", f"{config.host}:{config.port}"]
         )
         app = Application.from_args(args)
+        app.device_object.objectIdentifier = ("device", 1000)
         app.add_object(
             AnalogValueObject(
                 objectIdentifier=("analogValue", 1),
