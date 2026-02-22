@@ -6,6 +6,18 @@ from pydantic import AnyUrl
 
 
 @pytest.mark.asyncio
+async def test_read_object_list(server, mcp):
+    """Test read_object_list tool."""
+    async with Client(mcp) as client:
+        result = await client.call_tool(
+            "read_object_list",
+            {"host": server.host, "port": server.port, "instance": 1000},
+        )
+        assert len(result.content) == 1
+        assert "device" in result.content[0].text
+
+
+@pytest.mark.asyncio
 @pytest.mark.parametrize(
     "prop,expected",
     [
