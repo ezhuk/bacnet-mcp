@@ -15,6 +15,7 @@ async def test_read_object_list(server, mcp):
         )
         assert len(result.content) == 1
         assert "device" in result.content[0].text
+        assert len(result.structured_content["result"]) == 4
 
 
 @pytest.mark.asyncio

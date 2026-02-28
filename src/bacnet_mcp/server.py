@@ -3,7 +3,7 @@ from bacpypes3.argparse import SimpleArgumentParser
 from fastmcp import FastMCP, Context
 from fastmcp.server.lifespan import lifespan
 from fastmcp.server.auth.providers.workos import AuthKitProvider
-from fastmcp.prompts.prompt import Message
+from fastmcp.prompts import Message
 from fastmcp.resources import ResourceTemplate
 
 from bacnet_mcp.settings import Settings
