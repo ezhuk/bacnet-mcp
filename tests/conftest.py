@@ -1,5 +1,6 @@
 import asyncio
 import pytest
+import pytest_asyncio
 import threading
 
 from bacpypes3.argparse import SimpleArgumentParser
@@ -7,6 +8,8 @@ from bacpypes3.app import Application
 from bacpypes3.local.analog import AnalogValueObject
 from bacpypes3.local.binary import BinaryValueObject
 from pydantic import BaseModel
+
+from fastmcp import Client
 
 from bacnet_mcp.server import BACnetMCP
 
@@ -65,6 +68,12 @@ def server():
 @pytest.fixture(scope="session")
 def mcp():
     return BACnetMCP()
+
+
+@pytest_asyncio.fixture
+async def client(mcp):
+    async with Client(mcp) as c:
+        yield c
 
 
 @pytest.fixture
