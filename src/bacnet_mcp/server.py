@@ -5,6 +5,8 @@ from fastmcp.server.lifespan import lifespan
 from fastmcp.server.auth.providers.workos import AuthKitProvider
 from fastmcp.prompts import Message
 from fastmcp.resources import ResourceTemplate
+from starlette.requests import Request
+from starlette.responses import JSONResponse
 
 from bacnet_mcp.settings import Settings
 from bacnet_mcp.utils import get_device
@@ -94,6 +96,8 @@ class BACnetMCP(FastMCP):
 
         self.prompt(self.bacnet_error, name="bacnet_error", tags={"bacnet", "error"})
         self.prompt(self.bacnet_help, name="bacnet_help", tags={"bacnet", "help"})
+
+        self.custom_route("/health", methods=["GET"])(self.health_check)
 
     def _app(self) -> Application:
         if self.app is None:
@@ -208,3 +212,6 @@ class BACnetMCP(FastMCP):
             if error
             else []
         )
+
+    async def health_check(self, request: Request) -> JSONResponse:
+        return JSONResponse({"status": "ok"})
