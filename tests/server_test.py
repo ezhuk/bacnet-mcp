@@ -3,6 +3,7 @@ import pytest
 from fastmcp import Client
 from fastmcp.exceptions import ToolError
 from pydantic import AnyUrl
+from starlette.requests import Request
 
 
 @pytest.mark.asyncio
@@ -115,3 +116,18 @@ async def test_error_prompt(mcp, client):
     """Test error prompt."""
     result = await client.get_prompt("bacnet_error", {"error": "Could not read data"})
     assert len(result.messages) == 2
+
+
+@pytest.mark.asyncio
+async def test_health_check(mcp):
+    response = await mcp.health_check(
+        Request(
+            {
+                "type": "http",
+                "method": "GET",
+                "path": "/health",
+                "headers": [],
+            }
+        )
+    )
+    assert response.status_code == 200
