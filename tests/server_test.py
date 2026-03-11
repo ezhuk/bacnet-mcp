@@ -36,6 +36,21 @@ async def test_read_property(server, mcp, client, prop, expected):
 
 
 @pytest.mark.asyncio
+async def test_read_property_multiple(server, mcp, client):
+    """Test read_property_multiple tool."""
+    result = await client.call_tool(
+        "read_property_multiple",
+        {
+            "host": server.host,
+            "port": server.port,
+            "props": ["device,1000", ["objectName"]],
+        },
+    )
+    assert len(result.content) == 1
+    assert "device" in result.content[0].text
+
+
+@pytest.mark.asyncio
 async def test_write_property(server, mcp, client):
     """Test write_property tool."""
     result = await client.call_tool(
