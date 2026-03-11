@@ -68,6 +68,15 @@ class BACnetMCP(FastMCP):
         )
 
         self.tool(
+            self.read_property_multiple,
+            annotations={
+                "title": "Read Property Multiple",
+                "readOnlyHint": True,
+                "openWorldHint": True,
+            },
+        )
+
+        self.tool(
             self.write_property,
             annotations={
                 "title": "Write Property",
@@ -143,6 +152,24 @@ class BACnetMCP(FastMCP):
         except Exception as e:
             raise RuntimeError(
                 f"Could not read {obj},{instance} {prop} from {host}:{port}"
+            ) from e
+
+    async def read_property_multiple(
+        self,
+        ctx: Context,
+        name: str | None = None,
+        host: str | None = None,
+        port: int | None = None,
+        props: list[str | list[str]] | None = None,
+    ) -> str:
+        """Reads the content of one or more BACnet object properties on a remote unit."""
+        try:
+            host, port = get_device(self.settings, name, host, port)
+            res = await self._app().read_property_multiple(f"{host}:{port}", props)
+            return str(res)
+        except Exception as e:
+            raise RuntimeError(
+                f"Could not read properties from {host}:{port}: {e}"
             ) from e
 
     async def write_property(
