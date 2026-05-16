@@ -2,7 +2,6 @@ from bacpypes3.app import Application
 from bacpypes3.argparse import SimpleArgumentParser
 from fastmcp import FastMCP, Context
 from fastmcp.server.lifespan import lifespan
-from fastmcp.server.auth.providers.workos import AuthKitProvider
 from fastmcp.prompts import Message
 from fastmcp.resources import ResourceTemplate
 from starlette.requests import Request
@@ -28,17 +27,19 @@ class BACnetMCP(FastMCP):
         self.app: Application | None = None
         self.settings = Settings()
 
+        auth = None
+        if self.settings.auth.domain and self.settings.auth.url:
+            from fastmcp.server.auth.providers.workos import AuthKitProvider
+
+            auth = AuthKitProvider(
+                authkit_domain=self.settings.auth.domain,
+                base_url=self.settings.auth.url,
+            )
+
         super().__init__(
             name="BACnet MCP Server",
             lifespan=app_lifespan,
-            auth=(
-                AuthKitProvider(
-                    authkit_domain=self.settings.auth.domain,
-                    base_url=self.settings.auth.url,
-                )
-                if self.settings.auth.domain and self.settings.auth.url
-                else None
-            ),
+            auth=auth,
             **kwargs,
         )
 
