@@ -10,7 +10,7 @@ dependencies = [
 
 [dependency-groups]
 dev = [
-    "bacnet-mcp>=0.2.0",
+    "bacnet-mcp>=0.3.7",
     "pre-commit>=4.6.0",
-    "ruff>=0.15.12",
+    "ruff>=0.15.15",
 ]
