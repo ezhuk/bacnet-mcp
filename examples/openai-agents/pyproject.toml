@@ -5,12 +5,12 @@ description = "OpenAI Agents MCP example"
 readme = "README.md"
 requires-python = ">=3.13"
 dependencies = [
-    "openai-agents>=0.17.7",
+    "openai-agents>=0.19.1",
 ]
 
 [dependency-groups]
 dev = [
-    "bacnet-mcp>=0.3.7",
-    "pre-commit>=4.6.0",
-    "ruff>=0.15.20",
+    "bacnet-mcp>=0.3.8",
+    "pre-commit>=4.6.1",
+    "ruff>=0.16.0",
 ]
