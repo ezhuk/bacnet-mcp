@@ -78,7 +78,7 @@ npx @modelcontextprotocol/inspector
 
 ## Core Concepts
 
-The BACnet MCP server leverages FastMCP 2.0's core building blocks - resource templates, tools, and prompts - to streamline BACnet read and write operations with minimal boilerplate and a clean, Pythonic interface.
+The BACnet MCP server leverages FastMCP's core building blocks - resource templates, tools, and prompts - to streamline BACnet read and write operations with minimal boilerplate and a clean, Pythonic interface.
 
 ### Read Properties
 
