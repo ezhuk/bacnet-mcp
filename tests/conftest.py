@@ -1,19 +1,17 @@
 import asyncio
-import pytest
-import pytest_asyncio
 import threading
 
-from bacpypes3.argparse import SimpleArgumentParser
+import pytest
+import pytest_asyncio
 from bacpypes3.app import Application
+from bacpypes3.argparse import SimpleArgumentParser
 from bacpypes3.local.analog import AnalogValueObject
 from bacpypes3.local.binary import BinaryValueObject
+from fastmcp import Client
 from pydantic import BaseModel
 
-from fastmcp import Client
-
-from bacnet_mcp.server import BACnetMCP
-
 import bacnet_mcp.server as server_mod
+from bacnet_mcp.server import BACnetMCP
 
 
 class Config(BaseModel):
@@ -91,7 +89,7 @@ def mcp_error(monkeypatch):
 
 @pytest.fixture
 def cli(monkeypatch):
-    async def dummy_run_async(self, transport):
+    async def dummy_run_async(self, transport, host=None, port=None):
         return
 
     monkeypatch.setattr(

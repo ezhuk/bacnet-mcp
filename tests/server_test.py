@@ -1,5 +1,4 @@
 import pytest
-
 from fastmcp import Client
 from fastmcp.exceptions import ToolError
 from pydantic import AnyUrl

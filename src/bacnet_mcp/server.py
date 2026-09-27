@@ -1,9 +1,9 @@
 from bacpypes3.app import Application
 from bacpypes3.argparse import SimpleArgumentParser
-from fastmcp import FastMCP, Context
-from fastmcp.server.lifespan import lifespan
+from fastmcp import Context, FastMCP
 from fastmcp.prompts import Message
 from fastmcp.resources import ResourceTemplate
+from fastmcp.server.lifespan import lifespan
 from starlette.requests import Request
 from starlette.responses import JSONResponse
 
