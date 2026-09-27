@@ -1,5 +1,9 @@
+from typing import cast
+
 from bacpypes3.app import Application
 from bacpypes3.argparse import SimpleArgumentParser
+from bacpypes3.pdu import Address
+from bacpypes3.primitivedata import ObjectIdentifier
 from fastmcp import Context, FastMCP
 from fastmcp.prompts import Message
 from fastmcp.resources import ResourceTemplate
@@ -16,7 +20,7 @@ async def app_lifespan(server: FastMCP):
     args = SimpleArgumentParser().parse_args(args=[])
     app = Application().from_args(args)
     try:
-        server.app = app
+        cast("BACnetMCP", server).app = app
         yield {}
     finally:
         app.close()
@@ -166,7 +170,9 @@ class BACnetMCP(FastMCP):
         """Reads the content of one or more BACnet object properties on a remote unit."""
         try:
             host, port = get_device(self.settings, name, host, port)
-            res = await self._app().read_property_multiple(f"{host}:{port}", props)
+            res = await self._app().read_property_multiple(
+                Address(f"{host}:{port}"), props
+            )
             return str(res)
         except Exception as e:
             raise RuntimeError(
@@ -215,7 +221,9 @@ class BACnetMCP(FastMCP):
     ) -> list[str]:
         """Sends a 'who-has' broadcast message."""
         try:
-            res = await self._app().who_has(low, high, obj)
+            res = await self._app().who_has(
+                low, high, cast(ObjectIdentifier, ObjectIdentifier(obj))
+            )
             return [str(x.deviceIdentifier) for x in res]
         except Exception as e:
             raise RuntimeError(f"{e}") from e

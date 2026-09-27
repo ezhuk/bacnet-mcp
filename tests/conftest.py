@@ -1,5 +1,6 @@
 import asyncio
 import threading
+from typing import cast
 
 import pytest
 import pytest_asyncio
@@ -7,6 +8,7 @@ from bacpypes3.app import Application
 from bacpypes3.argparse import SimpleArgumentParser
 from bacpypes3.local.analog import AnalogValueObject
 from bacpypes3.local.binary import BinaryValueObject
+from bacpypes3.primitivedata import ObjectIdentifier
 from fastmcp import Client
 from pydantic import BaseModel
 
@@ -26,7 +28,12 @@ async def _server_main(config: Config) -> None:
             ["--address", f"{config.host}:{config.port}"]
         )
         app = Application.from_args(args)
-        app.device_object.objectIdentifier = ("device", 1000)
+        device = app.device_object
+        assert device is not None
+        device.objectIdentifier = cast(
+            ObjectIdentifier,
+            ObjectIdentifier("device,1000"),
+        )
         app.add_object(
             AnalogValueObject(
                 objectIdentifier=("analogValue", 1),
@@ -46,7 +53,7 @@ async def _server_main(config: Config) -> None:
             )
         )
         await asyncio.Future()
-    except Exception as e:
+    except OSError as e:
         print(f"ERROR: {e}")
     finally:
         if app:
