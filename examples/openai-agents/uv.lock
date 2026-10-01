@@ -73,7 +73,7 @@ wheels = [
 
 [[package]]
 name = "bacnet-mcp"
-version = "0.3.8"
+version = "0.4.0"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "bacpypes3" },
@@ -81,9 +81,9 @@ dependencies = [
     { name = "pydantic-settings" },
     { name = "typer" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/4b/3c/0cf0a908d8703a4c489727835f14eedb6bb7984f27e0a1ded70295305832/bacnet_mcp-0.3.8.tar.gz", hash = "sha256:15456c32a084495c0ca9c14c61132bcb0fc017f93b5cfdadd0041ae65b8fa42b", size = 295934, upload-time = "2026-07-15T00:17:11.166Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/bf/fe/ffe86605083925cd3df708d2ee295694fc0d792e1cecbaf0e5fd12d19f77/bacnet_mcp-0.4.0.tar.gz", hash = "sha256:885589b58a5abcff26df55128257ed1a372ed3911181e9b9e9eccbc0dd0407b4", size = 5958, upload-time = "2026-09-27T20:23:48.061Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/e7/aa/19de26791e2499125c6767e313b5f4ff6a1ef539c2773983509f2dddcaf8/bacnet_mcp-0.3.8-py3-none-any.whl", hash = "sha256:e74f1d8df9f606ef024264a46d0df20a65fc37493f64ddb33b2f2aff23e58735", size = 8498, upload-time = "2026-07-15T00:17:09.853Z" },
+    { url = "https://files.pythonhosted.org/packages/89/bd/6a29df2438030e9d7f0fe9690beb94a05b817abb70a4fdb99afa9038ac1b/bacnet_mcp-0.4.0-py3-none-any.whl", hash = "sha256:85af59261770d216d9f7db246a2cdcca68821d4a83ae8c4e1d1228b62d5e5a64", size = 7860, upload-time = "2026-09-27T20:23:46.933Z" },
 ]
 
 [[package]]
