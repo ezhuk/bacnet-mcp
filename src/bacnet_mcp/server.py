@@ -222,16 +222,18 @@ class BACnetMCP(FastMCP):
     async def who_has(
         self,
         ctx: Context,
-        low: int,
-        high: int,
         obj: str,
-    ) -> list[str]:
+        low: int | None = None,
+        high: int | None = None,
+    ) -> list[dict[str, Any]]:
         """Sends a 'who-has' broadcast message."""
         try:
+            if low is not None and high is None:
+                high = low
             res = await self._app().who_has(
                 low, high, cast(ObjectIdentifier, ObjectIdentifier(obj))
             )
-            return [str(x.deviceIdentifier) for x in res]
+            return [{**sequence_to_json(x), "pduSource": str(x.pduSource)} for x in res]
         except Exception as e:
             raise RuntimeError(f"{e}") from e
 

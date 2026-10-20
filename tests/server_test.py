@@ -75,7 +75,7 @@ async def test_write_property(server, mcp, client):
         {"low": 999, "high": 1001},
     ],
 )
-async def test_who_is_parameters(server, mcp, client, params):
+async def test_who_is(server, mcp, client, params):
     """Test who_is tool."""
     result = await client.call_tool("who_is", params)
 
@@ -100,13 +100,27 @@ async def test_who_is_error(server, mcp_error):
 
 
 @pytest.mark.asyncio
-async def test_who_has(server, mcp, client):
+@pytest.mark.parametrize(
+    "params",
+    [
+        {"obj": "analogValue,1"},
+        {"obj": "analogValue,1", "low": 1000},
+        {"obj": "analogValue,1", "low": 999, "high": 1001},
+    ],
+)
+async def test_who_has(server, mcp, client, params):
     """Test who_has tool."""
-    result = await client.call_tool(
-        "who_has",
-        {"low": 999, "high": 1001, "obj": "analogValue,1"},
-    )
+    result = await client.call_tool("who_has", params)
+
     assert not result.is_error
+    assert isinstance(result.structured_content["result"], list)
+
+    for response in result.structured_content["result"]:
+        assert isinstance(response, dict)
+        assert "deviceIdentifier" in response
+        assert "objectIdentifier" in response
+        assert "objectName" in response
+        assert "pduSource" in response
 
 
 @pytest.mark.asyncio
