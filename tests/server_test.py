@@ -67,16 +67,20 @@ async def test_write_property(server, mcp, client):
 
 
 @pytest.mark.asyncio
-async def test_who_is(server, mcp, client):
+@pytest.mark.parametrize(
+    "params",
+    [
+        {},
+        {"low": 1000},
+        {"low": 999, "high": 1001},
+    ],
+)
+async def test_who_is_parameters(server, mcp, client, params):
     """Test who_is tool."""
-    result = await client.call_tool(
-        "who_is",
-        {
-            "low": 999,
-            "high": 1001,
-        },
-    )
+    result = await client.call_tool("who_is", params)
+
     assert not result.is_error
+    assert isinstance(result.structured_content["result"], list)
 
 
 @pytest.mark.asyncio
