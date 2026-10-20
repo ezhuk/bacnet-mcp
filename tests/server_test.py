@@ -63,7 +63,7 @@ async def test_write_property(server, mcp, client):
         },
     )
     assert len(result.content) == 1
-    assert "succedeed" in result.content[0].text
+    assert "succeeded" in result.content[0].text
 
 
 @pytest.mark.asyncio

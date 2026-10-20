@@ -188,14 +188,15 @@ class BACnetMCP(FastMCP):
         obj: str = "analogValue,1",
         prop: str = "presentValue",
         data: str = "1.0",
+        priority: int | None = None,
     ) -> str:
         """Writes a BACnet object property on a remote device."""
         try:
             host, port = get_device(self.settings, name, host, port)
             await self._app().write_property(
-                f"{host}:{port}", f"{obj}", f"{prop}", f"{data}"
+                f"{host}:{port}", f"{obj}", f"{prop}", f"{data}", priority=priority
             )
-            return f"Write to {obj} {prop} on {host}:{port} has succedeed"
+            return f"Write to {obj} {prop} on {host}:{port} has succeeded"
         except Exception as e:
             raise RuntimeError(f"{e}") from e
 
