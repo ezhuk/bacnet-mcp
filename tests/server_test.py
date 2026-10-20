@@ -77,6 +77,15 @@ async def test_who_is(server, mcp, client):
         },
     )
     assert not result.is_error
+    devices = result.structured_content["result"]
+    assert isinstance(devices, list)
+
+    for device in devices:
+        assert "iAmDeviceIdentifier" in device
+        assert "maxAPDULengthAccepted" in device
+        assert "segmentationSupported" in device
+        assert "vendorID" in device
+        assert "pduSource" in device
 
 
 @pytest.mark.asyncio

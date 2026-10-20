@@ -1,7 +1,8 @@
-from typing import cast
+from typing import Any, cast
 
 from bacpypes3.app import Application
 from bacpypes3.argparse import SimpleArgumentParser
+from bacpypes3.json.util import sequence_to_json
 from bacpypes3.pdu import Address
 from bacpypes3.primitivedata import ObjectIdentifier
 from fastmcp import Context, FastMCP
@@ -203,13 +204,18 @@ class BACnetMCP(FastMCP):
     async def who_is(
         self,
         ctx: Context,
-        low: int,
-        high: int,
-    ) -> list[str]:
+        low: int | None = None,
+        high: int | None = None,
+        address: str | None = None,
+    ) -> list[dict[str, Any]]:
         """Sends a 'who-is' broadcast message."""
         try:
-            res = await self._app().who_is(low, high)
-            return [str(x.iAmDeviceIdentifier) for x in res]
+            if low is not None and high is None:
+                high = low
+            res = await self._app().who_is(
+                low, high, Address(address) if address else None
+            )
+            return [{**sequence_to_json(x), "pduSource": str(x.pduSource)} for x in res]
         except Exception as e:
             raise RuntimeError(f"{e}") from e
 
