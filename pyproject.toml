@@ -6,7 +6,7 @@ readme = "README.md"
 requires-python = ">=3.13"
 dependencies = [
     "bacpypes3>=0.0.110",
-    "fastmcp>=4.0.0",
+    "fastmcp>=4.1.0",
     "pydantic-settings>=2.16.0",
     "typer>=0.27.0",
 ]
@@ -15,17 +15,17 @@ dependencies = [
 bacnet-mcp = "bacnet_mcp.cli:app"
 
 [build-system]
-requires = ["uv_build>=0.12.15,<0.13"]
+requires = ["uv_build>=0.13.0"]
 build-backend = "uv_build"
 
 [dependency-groups]
 dev = [
     "pre-commit>=4.7.0",
-    "pytest>=8.4.0",
-    "pytest-asyncio>=1.1.0",
-    "pytest-cov>=6.3.0",
-    "ruff>=0.17.1",
-    "ty>=0.0.83",
+    "pytest>=9.2.0",
+    "pytest-asyncio>=1.4.0",
+    "pytest-cov>=7.1.0",
+    "ruff>=0.17.0",
+    "ty>=0.0.95",
 ]
 
 [tool.ty.src]
