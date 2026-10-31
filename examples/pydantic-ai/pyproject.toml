@@ -1,16 +1,16 @@
 [project]
 name = "pydantic-mcp-example"
-version = "0.1.11"
+version = "0.1.12"
 description = "PydanticAI MCP example"
 readme = "README.md"
 requires-python = ">=3.13"
 dependencies = [
-    "pydantic-ai-slim[mcp,openai]>=2.20.0",
+    "pydantic-ai-slim[mcp,openai]>=2.64.0",
 ]
 
 [dependency-groups]
 dev = [
-    "bacnet-mcp>=0.3.8",
-    "pre-commit>=4.6.1",
-    "ruff>=0.16.0",
+    "bacnet-mcp>=0.4.0",
+    "pre-commit>=4.7.0",
+    "ruff>=0.17.0",
 ]
