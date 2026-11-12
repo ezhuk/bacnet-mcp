@@ -8,7 +8,7 @@ dependencies = [
     "bacpypes3>=0.0.110",
     "fastmcp>=4.1.0",
     "pydantic-settings>=2.16.0",
-    "typer>=0.27.0",
+    "typer>=0.29.0",
 ]
 
 [project.scripts]
